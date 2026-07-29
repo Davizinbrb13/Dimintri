@@ -1,0 +1,7 @@
+/*
+  The Univassouras site loads Museo Sans from Adobe Typekit:
+  https://use.typekit.net/xsi3ymn.css
+
+  Verify font licensing before shipping this import in production apps.
+*/
+@import url("https://use.typekit.net/xsi3ymn.css");

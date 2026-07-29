@@ -1,0 +1,51 @@
+export const uvTokens = {
+  color: {
+    primary: "#6D1D20",
+    primary800: "#551619",
+    primary700: "#6D1D20",
+    primary600: "#9B3234",
+    primaryAlpha: "#6D1D20BD",
+    primary50: "#F8F1F2",
+    gold: "#AB8D57",
+    gold700: "#8F7446",
+    amber: "#FFBA00",
+    amber700: "#CE8500",
+    orange: "#EE8837",
+    green: "#8EC648",
+    whatsapp: "#25D366",
+    teal: "#03647D",
+    blue: "#1F3C7A",
+    blueSoft: "#20507A",
+    text: "#333333",
+    textSoft: "#54595F",
+    textMuted: "#7A7A7A",
+    surface: "#FFFFFF",
+    surfaceSoft: "#F3F1F2",
+    border: "#00000026",
+    borderStrong: "#D7D1D2",
+    focus: "#03647D",
+  },
+  font: {
+    sans: '"museo-sans", "Museo Sans", Arial, sans-serif',
+    support: "Roboto, Arial, sans-serif",
+  },
+  radius: {
+    none: "0",
+    xs: "3px",
+    sm: "4px",
+    md: "6px",
+    pill: "999px",
+  },
+  shadow: {
+    nav: "0 5px 30px rgb(0 0 0 / 0.1)",
+    popover: "0 0 10px rgb(0 0 0 / 0.2)",
+    float: "0 8px 28px rgb(0 0 0 / 0.14)",
+  },
+  layout: {
+    containerMax: "1200px",
+    breakpointMobile: "767px",
+    breakpointTablet: "1024px",
+  },
+} as const;
+
+export type UvTokens = typeof uvTokens;

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Univassouras Design System Preview</title>
+    <link rel="stylesheet" href="./fonts.css" />
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./components.css" />
+  </head>
+  <body>
+    <div class="uv-shell">
+      <div class="uv-topbar">
+        <div class="uv-container uv-topbar__inner">
+          <ul class="uv-link-row" aria-label="Links institucionais">
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Biblioteca</a></li>
+            <li><a href="#">FIES</a></li>
+            <li><a href="#">Marica</a></li>
+            <li><a href="#">Saquarema</a></li>
+            <li><a href="#">Internacional</a></li>
+          </ul>
+          <ul class="uv-link-row" aria-label="Acessos">
+            <li><a href="#">Aluno</a></li>
+            <li><a href="#">Colaborador</a></li>
+            <li><a href="#">Candidato</a></li>
+            <li><a href="#">Webmail</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <header class="uv-header">
+        <div class="uv-container uv-header__inner">
+          <a class="uv-logo" href="#" aria-label="Universidade de Vassouras">
+            <img src="./assets/logos/univassouras-horizontal.png" alt="" />
+          </a>
+          <nav class="uv-nav" aria-label="Principal">
+            <a href="#">Cursos</a>
+            <a href="#">Pesquisa</a>
+            <a href="#">Extensao</a>
+            <a class="uv-button uv-button--accent" href="#">Inscreva-se</a>
+          </nav>
+        </div>
+      </header>
+
+      <div class="uv-announcement">
+        A Univassouras esta entre as melhores universidades privadas do Rio de Janeiro, segundo o IGC, divulgado pelo MEC
+      </div>
+
+      <main>
+        <section class="uv-page-title">
+          <div class="uv-container">
+            <h1>FUSVE App</h1>
+          </div>
+        </section>
+
+        <section class="uv-section uv-section--soft">
+          <div class="uv-container uv-stack">
+            <div class="uv-section-heading">
+              <span class="uv-badge">Sistema</span>
+              <h2 class="uv-display-title">
+                Componentes base para telas institucionais e operacionais
+              </h2>
+            </div>
+
+            <div class="uv-grid">
+              <article class="uv-card">
+                <p class="uv-card__eyebrow">Ingresso</p>
+                <h3>Processos seletivos</h3>
+                <p>Cards claros, borda discreta e chamadas diretas para acoes de alto valor.</p>
+              </article>
+              <article class="uv-card">
+                <p class="uv-card__eyebrow">Ensino</p>
+                <h3>Cursos e turmas</h3>
+                <p>Hierarquia com Museo Sans, titulos semibold e texto cinza para leitura longa.</p>
+              </article>
+              <article class="uv-card">
+                <p class="uv-card__eyebrow">Servicos</p>
+                <h3>Atendimento</h3>
+                <p>Superficies neutras para formularios, listas, dashboards e fluxos repetidos.</p>
+              </article>
+            </div>
+
+            <div class="uv-card">
+              <form class="uv-grid">
+                <label class="uv-field">
+                  <span class="uv-label">Nome</span>
+                  <input class="uv-input" placeholder="Nome completo" />
+                </label>
+                <label class="uv-field">
+                  <span class="uv-label">Campus</span>
+                  <select class="uv-select">
+                    <option>Vassouras</option>
+                    <option>Marica</option>
+                    <option>Saquarema</option>
+                  </select>
+                </label>
+                <div class="uv-field">
+                  <span class="uv-label">Acoes</span>
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <button class="uv-button uv-button--primary" type="button">Salvar</button>
+                    <button class="uv-button uv-button--ghost" type="button">Cancelar</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="uv-alert">
+              Use o amarelo institucional para acoes prioritarias. Para app, prefira texto escuro sobre amarelo para manter contraste.
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="uv-footer">
+        <div class="uv-container">
+          <div class="uv-footer__brand">
+            <img src="./assets/logos/univassouras-vertical-white.png" alt="Universidade de Vassouras" />
+          </div>
+          <div class="uv-footer__grid">
+            <section>
+              <h2>A Universidade</h2>
+              <ul>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Pesquisa</a></li>
+                <li><a href="#">Extensao</a></li>
+                <li><a href="#">Editora</a></li>
+              </ul>
+            </section>
+            <section>
+              <h2>Ensino</h2>
+              <ul>
+                <li><a href="#">Graduacao EAD</a></li>
+                <li><a href="#">Graduacao Presencial</a></li>
+                <li><a href="#">Especializacao e MBA</a></li>
+                <li><a href="#">Mestrados</a></li>
+              </ul>
+            </section>
+            <section>
+              <h2>Ingresso</h2>
+              <ul>
+                <li><a href="#">Processo Seletivo</a></li>
+                <li><a href="#">Medicina</a></li>
+                <li><a href="#">Transferencia</a></li>
+              </ul>
+            </section>
+            <section>
+              <h2>Servicos</h2>
+              <ul>
+                <li><a href="#">Fale Conosco</a></li>
+                <li><a href="#">Ouvidoria</a></li>
+                <li><a href="#">Canal de Etica</a></li>
+              </ul>
+            </section>
+          </div>
+          <div class="uv-footer__bottom">
+            Mantida pela Fundacao Severino Sombra
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
