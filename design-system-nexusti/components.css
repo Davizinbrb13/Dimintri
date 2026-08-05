@@ -1,0 +1,58 @@
+.nexus-button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--nexus-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--nexus-radius-sm);
+  background: var(--nexus-color-primary);
+  color: var(--nexus-color-surface);
+  padding: 0.7rem 1rem;
+  font: 700 var(--nexus-font-size-sm) / 1 var(--nexus-font-sans);
+  text-decoration: none;
+}
+
+.nexus-button:hover {
+  background: var(--nexus-color-primary-800);
+}
+
+.nexus-button-secondary {
+  border-color: var(--nexus-color-border-strong);
+  background: var(--nexus-color-surface);
+  color: var(--nexus-color-text);
+}
+
+.nexus-card {
+  border: 1px solid var(--nexus-color-border-strong);
+  border-radius: var(--nexus-radius-md);
+  background: var(--nexus-color-surface);
+  padding: var(--nexus-space-6);
+  box-shadow: var(--nexus-shadow-nav);
+}
+
+.nexus-field {
+  min-height: 44px;
+  border: 1px solid var(--nexus-color-border-strong);
+  border-radius: var(--nexus-radius-sm);
+  background: var(--nexus-color-surface);
+  color: var(--nexus-color-text);
+  padding: 0.7rem 0.8rem;
+  font: var(--nexus-font-size-md) / 1.5 var(--nexus-font-sans);
+}
+
+.nexus-field:focus {
+  border-color: var(--nexus-color-primary);
+  outline: 3px solid var(--nexus-color-primary-50);
+  outline-offset: 1px;
+}
+
+.nexus-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--nexus-radius-pill);
+  background: var(--nexus-color-primary-50);
+  color: var(--nexus-color-primary);
+  padding: var(--nexus-space-1) var(--nexus-space-3);
+  font: 700 var(--nexus-font-size-xs) / 1.4 var(--nexus-font-sans);
+}

@@ -1,0 +1,51 @@
+export const nexusTokens = {
+  color: {
+    primary: "#800000",
+    primary800: "#5C0000",
+    primary700: "#700000",
+    primary600: "#991B1B",
+    primaryAlpha: "#800000BD",
+    primary50: "#F8EEEE",
+    gold: "#9A783E",
+    gold700: "#765A2B",
+    amber: "#E5AA19",
+    amber700: "#A86E00",
+    orange: "#C76B32",
+    green: "#4F7F45",
+    whatsapp: "#218C50",
+    teal: "#146B78",
+    blue: "#315278",
+    blueSoft: "#426987",
+    text: "#333333",
+    textSoft: "#545454",
+    textMuted: "#737373",
+    surface: "#FFFFFF",
+    surfaceSoft: "#F2F2F2",
+    border: "#00000024",
+    borderStrong: "#D6D6D6",
+    focus: "#9B3232",
+  },
+  font: {
+    sans: 'Inter, "Segoe UI", Arial, sans-serif',
+    support: 'Inter, "Segoe UI", Arial, sans-serif',
+  },
+  radius: {
+    none: "0",
+    xs: "3px",
+    sm: "4px",
+    md: "6px",
+    pill: "999px",
+  },
+  shadow: {
+    nav: "0 5px 30px rgb(0 0 0 / 0.1)",
+    popover: "0 0 10px rgb(0 0 0 / 0.2)",
+    float: "0 8px 28px rgb(0 0 0 / 0.14)",
+  },
+  layout: {
+    containerMax: "1200px",
+    breakpointMobile: "767px",
+    breakpointTablet: "1024px",
+  },
+} as const;
+
+export type NexusTokens = typeof nexusTokens;

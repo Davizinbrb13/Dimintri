@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NexusTI Design System</title>
+    <link rel="stylesheet" href="./fonts.css" />
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./components.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--nexus-color-surface-soft);
+        color: var(--nexus-color-text);
+        font-family: var(--nexus-font-sans);
+      }
+      main { width: min(100% - 32px, 980px); margin: 0 auto; padding: 48px 0; }
+      header { display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-bottom: 40px; }
+      header img { width: min(320px, 60vw); height: auto; }
+      h1 { margin: 0; font-size: 1.75rem; }
+      .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+      .swatch { min-height: 132px; display: flex; align-items: end; border: 1px solid var(--nexus-color-border-strong); border-radius: var(--nexus-radius-md); padding: 14px; font-weight: 700; }
+      .primary { background: #800000; color: white; }
+      .charcoal { background: #333333; color: white; }
+      .soft { background: #f2f2f2; }
+      .white { background: #ffffff; }
+      .demo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 28px; }
+      @media (max-width: 680px) { .grid { grid-template-columns: repeat(2, 1fr); } header { align-items: flex-start; flex-direction: column; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="./assets/nexusti-logo.png" alt="NexusTI" />
+        <h1>Design System</h1>
+      </header>
+      <section class="grid" aria-label="Paleta principal">
+        <div class="swatch primary">#800000</div>
+        <div class="swatch charcoal">#333333</div>
+        <div class="swatch soft">#F2F2F2</div>
+        <div class="swatch white">#FFFFFF</div>
+      </section>
+      <section class="demo" aria-label="Componentes">
+        <button class="nexus-button" type="button">Acao principal</button>
+        <button class="nexus-button nexus-button-secondary" type="button">Acao secundaria</button>
+        <span class="nexus-badge">Em atendimento</span>
+        <input class="nexus-field" aria-label="Campo de exemplo" placeholder="Campo de exemplo" />
+      </section>
+    </main>
+  </body>
+</html>

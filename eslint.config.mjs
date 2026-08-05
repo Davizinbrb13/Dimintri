@@ -16,5 +16,5 @@ export default defineConfig([
       ...nextPlugin.configs["core-web-vitals"].rules,
     },
   },
-  globalIgnores([".next/**", "design-system-univassouras/**"]),
+  globalIgnores([".next/**", "design-system-nexusti/**"]),
 ]);

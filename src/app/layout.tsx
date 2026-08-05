@@ -2,17 +2,18 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  applicationName: "NexusTI",
   title: {
-    default: "DIMI | Demandas de TI",
-    template: "%s | DIMI",
+    default: "NexusTI | Demandas de TI",
+    template: "%s | NexusTI",
   },
-  description: "Gestao de chamados da equipe de Tecnologia da Informacao.",
+  description: "Gestao inteligente de chamados e demandas de Tecnologia da Informacao.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#6d1d20",
+  themeColor: "#800000",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

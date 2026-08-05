@@ -1,5 +1,5 @@
-@import "../../design-system-univassouras/fonts.css";
-@import "../../design-system-univassouras/tokens.css";
+@import "../../design-system-nexusti/fonts.css";
+@import "../../design-system-nexusti/tokens.css";
 
 *,
 *::before,
@@ -8,12 +8,12 @@
 }
 
 :root {
-  --app-bg: #f6f5f5;
+  --app-bg: #f2f2f2;
   --app-panel: #ffffff;
-  --app-line: #e2dedf;
-  --app-line-soft: #ece9ea;
-  --app-text: #292627;
-  --app-muted: #716b6d;
+  --app-line: #dedede;
+  --app-line-soft: #ebebeb;
+  --app-text: #333333;
+  --app-muted: #6b6b6b;
   --app-sidebar: 248px;
   --app-topbar: 42px;
 }
@@ -29,7 +29,7 @@ body {
   overflow-x: hidden;
   background: var(--app-bg);
   color: var(--app-text);
-  font-family: var(--uv-font-sans);
+  font-family: var(--nexus-font-sans);
   font-size: 16px;
   line-height: 1.5;
 }
@@ -59,7 +59,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--uv-color-teal), white 22%);
+  outline: 3px solid color-mix(in srgb, var(--nexus-color-focus), white 25%);
   outline-offset: 2px;
 }
 
@@ -69,11 +69,11 @@ textarea {
   width: 100%;
   min-height: 44px;
   border: 1px solid #cfc9cb;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   background: white;
   color: var(--app-text);
   padding: 0.7rem 0.8rem;
-  transition: border-color var(--uv-duration-fast), box-shadow var(--uv-duration-fast);
+  transition: border-color var(--nexus-duration-fast), box-shadow var(--nexus-duration-fast);
 }
 
 input:hover,
@@ -85,7 +85,7 @@ textarea:hover {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--uv-color-teal);
+  border-color: var(--nexus-color-teal);
   box-shadow: 0 0 0 3px rgb(3 100 125 / 0.1);
 }
 
@@ -118,17 +118,17 @@ p {
   justify-content: center;
   gap: 0.55rem;
   border: 1px solid transparent;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   padding: 0.68rem 1rem;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color var(--uv-duration-fast),
-    border-color var(--uv-duration-fast),
-    color var(--uv-duration-fast),
-    transform var(--uv-duration-fast);
+    background-color var(--nexus-duration-fast),
+    border-color var(--nexus-duration-fast),
+    color var(--nexus-duration-fast),
+    transform var(--nexus-duration-fast);
 }
 
 .button:hover:not(:disabled) {
@@ -145,21 +145,21 @@ p {
 }
 
 .button-primary {
-  background: var(--uv-color-primary);
+  background: var(--nexus-color-primary);
   color: white;
 }
 
 .button-primary:hover:not(:disabled) {
-  background: var(--uv-color-primary-800);
+  background: var(--nexus-color-primary-800);
 }
 
 .button-accent {
-  background: var(--uv-color-amber);
+  background: var(--nexus-color-amber);
   color: #2e270f;
 }
 
 .button-accent:hover:not(:disabled) {
-  background: var(--uv-color-amber-700);
+  background: var(--nexus-color-amber-700);
   color: white;
 }
 
@@ -170,8 +170,8 @@ p {
 }
 
 .button-secondary:hover:not(:disabled) {
-  border-color: var(--uv-color-primary);
-  color: var(--uv-color-primary);
+  border-color: var(--nexus-color-primary);
+  color: var(--nexus-color-primary);
 }
 
 .button-block {
@@ -189,15 +189,15 @@ p {
   flex: 0 0 auto;
   place-items: center;
   border: 0;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   background: transparent;
   color: inherit;
   cursor: pointer;
 }
 
 .icon-button:hover {
-  background: var(--uv-color-primary-50);
-  color: var(--uv-color-primary);
+  background: var(--nexus-color-primary-50);
+  color: var(--nexus-color-primary);
 }
 
 .icon-button-small {
@@ -207,7 +207,7 @@ p {
 
 .eyebrow {
   margin: 0;
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -230,7 +230,7 @@ p {
   place-items: center;
   overflow: hidden;
   padding: 32px;
-  background: #f1eeee;
+  background: var(--nexus-color-surface-soft);
 }
 
 .auth-page::before {
@@ -238,8 +238,8 @@ p {
   position: absolute;
   inset: 0 auto 0 0;
   width: 34%;
-  background-color: var(--uv-color-primary);
-  background-image: url("/brand/univassouras-symbol.svg");
+  background-color: var(--nexus-color-primary);
+  background-image: url("/brand/nexusti-symbol-inverted.png");
   background-position: 50% 84%;
   background-repeat: no-repeat;
   background-size: min(340px, 75%);
@@ -251,9 +251,9 @@ p {
   z-index: 1;
   width: min(100%, 470px);
   border: 1px solid var(--app-line);
-  border-radius: var(--uv-radius-md);
+  border-radius: var(--nexus-radius-md);
   background: white;
-  box-shadow: 0 18px 50px rgb(49 31 33 / 0.14);
+  box-shadow: 0 18px 50px rgb(0 0 0 / 0.14);
   padding: 34px;
 }
 
@@ -261,23 +261,13 @@ p {
   min-height: 54px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
   margin-bottom: 30px;
 }
 
-.auth-brand img {
-  width: 205px;
+.auth-logo {
+  width: 218px;
   height: auto;
   object-fit: contain;
-}
-
-.auth-product {
-  border-left: 1px solid var(--app-line);
-  padding-left: 18px;
-  color: var(--uv-color-primary);
-  font-size: 1.15rem;
-  font-weight: 700;
 }
 
 .auth-heading {
@@ -300,8 +290,8 @@ p {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 3px;
-  border-radius: var(--uv-radius-md);
-  background: #ede9ea;
+  border-radius: var(--nexus-radius-md);
+  background: #e8e8e8;
   padding: 3px;
 }
 
@@ -313,7 +303,7 @@ p {
   justify-content: center;
   gap: 6px;
   border: 0;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   background: transparent;
   color: var(--app-muted);
   font-weight: 600;
@@ -322,7 +312,7 @@ p {
 
 .segmented-control button[aria-pressed="true"] {
   background: white;
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
   box-shadow: 0 1px 4px rgb(32 26 27 / 0.12);
 }
 
@@ -396,7 +386,7 @@ p {
 .form-message {
   margin: 0;
   border-left: 3px solid;
-  border-radius: var(--uv-radius-xs);
+  border-radius: var(--nexus-radius-xs);
   padding: 10px 12px;
   font-size: 0.875rem;
 }
@@ -450,18 +440,10 @@ p {
   padding: 16px 20px;
 }
 
-.sidebar-brand img {
-  width: 158px;
+.sidebar-logo {
+  width: 176px;
   height: auto;
   object-fit: contain;
-}
-
-.sidebar-brand > span {
-  border-left: 1px solid var(--app-line);
-  padding-left: 11px;
-  color: var(--uv-color-primary);
-  font-size: 0.85rem;
-  font-weight: 700;
 }
 
 .sidebar-nav {
@@ -484,7 +466,7 @@ p {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   color: #5a5355;
   padding: 0 12px;
   font-weight: 600;
@@ -492,12 +474,12 @@ p {
 }
 
 .sidebar-nav a:hover {
-  background: var(--uv-color-primary-50);
-  color: var(--uv-color-primary);
+  background: var(--nexus-color-primary-50);
+  color: var(--nexus-color-primary);
 }
 
 .sidebar-nav a.active {
-  background: var(--uv-color-primary);
+  background: var(--nexus-color-primary);
   color: white;
 }
 
@@ -518,8 +500,8 @@ p {
   flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
-  background: var(--uv-color-primary-50);
-  color: var(--uv-color-primary);
+  background: var(--nexus-color-primary-50);
+  color: var(--nexus-color-primary);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -561,8 +543,8 @@ p {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  border-bottom: 1px solid rgb(79 20 23 / 0.35);
-  background: var(--uv-color-primary);
+  border-bottom: 1px solid rgb(0 0 0 / 0.22);
+  background: var(--nexus-color-primary);
   color: white;
   padding: 0 28px;
   font-size: 0.78rem;
@@ -621,7 +603,7 @@ p {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   border: 1px solid var(--app-line);
-  border-radius: var(--uv-radius-md);
+  border-radius: var(--nexus-radius-md);
   background: white;
   margin-bottom: 18px;
 }
@@ -646,7 +628,7 @@ p {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   background: #f0edee;
   color: #696164;
 }
@@ -658,7 +640,7 @@ p {
 
 .metric-info .metric-icon {
   background: #eaf6f8;
-  color: var(--uv-color-teal);
+  color: var(--nexus-color-teal);
 }
 
 .metric-success .metric-icon {
@@ -730,7 +712,7 @@ p {
 
 .board-notice {
   border: 1px solid;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   margin: -8px 0 18px;
   padding: 10px 12px;
   font-size: 0.8rem;
@@ -745,7 +727,7 @@ p {
 .board-notice-error {
   border-color: #e4b9bc;
   background: #fff2f3;
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
 }
 
 .kanban-board {
@@ -760,10 +742,10 @@ p {
   min-width: 0;
   border: 1px solid var(--app-line);
   border-top: 3px solid #8e8587;
-  border-radius: var(--uv-radius-md);
+  border-radius: var(--nexus-radius-md);
   background: #eeebec;
   overflow: hidden;
-  transition: box-shadow var(--uv-duration-fast);
+  transition: box-shadow var(--nexus-duration-fast);
 }
 
 .kanban-lane.lane-drop-target {
@@ -775,11 +757,11 @@ p {
 }
 
 .lane-new {
-  border-top-color: var(--uv-color-amber-700);
+  border-top-color: var(--nexus-color-amber-700);
 }
 
 .lane-progress {
-  border-top-color: var(--uv-color-teal);
+  border-top-color: var(--nexus-color-teal);
 }
 
 .lane-resolved {
@@ -836,13 +818,13 @@ p {
   flex-direction: column;
   align-items: stretch;
   border: 1px solid #d8d2d4;
-  border-radius: var(--uv-radius-md);
+  border-radius: var(--nexus-radius-md);
   background: white;
   color: var(--app-text);
   padding: 14px;
   text-align: left;
   cursor: pointer;
-  transition: border-color var(--uv-duration-fast), box-shadow var(--uv-duration-fast), transform var(--uv-duration-fast);
+  transition: border-color var(--nexus-duration-fast), box-shadow var(--nexus-duration-fast), transform var(--nexus-duration-fast);
 }
 
 .ticket-card-drag-ready {
@@ -879,7 +861,7 @@ p {
 }
 
 .ticket-card-topline strong {
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
   font-size: 0.8rem;
 }
 
@@ -936,7 +918,7 @@ p {
   max-width: 100%;
   overflow: hidden;
   border: 1px solid var(--app-line);
-  border-radius: var(--uv-radius-pill);
+  border-radius: var(--nexus-radius-pill);
   background: #f7f5f5;
   padding: 3px 8px;
   color: #625a5c;
@@ -980,7 +962,7 @@ p {
   width: min(calc(100% - 32px), 650px);
   max-height: min(92vh, 880px);
   border: 0;
-  border-radius: var(--uv-radius-md);
+  border-radius: var(--nexus-radius-md);
   background: transparent;
   color: var(--app-text);
   padding: 0;
@@ -1001,7 +983,7 @@ p {
   max-height: min(92vh, 880px);
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-  border-radius: var(--uv-radius-md);
+  border-radius: var(--nexus-radius-md);
   background: white;
   box-shadow: 0 24px 70px rgb(17 10 11 / 0.3);
   overflow: hidden;
@@ -1099,9 +1081,9 @@ p {
   left: 0;
   display: grid;
   border: 1px solid #cfc9cb;
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   background: white;
-  box-shadow: var(--uv-shadow-popover);
+  box-shadow: var(--nexus-shadow-popover);
   overflow: hidden;
 }
 
@@ -1125,11 +1107,11 @@ p {
 }
 
 .autocomplete-menu button:hover {
-  background: var(--uv-color-primary-50);
+  background: var(--nexus-color-primary-50);
 }
 
 .autocomplete-menu button > span {
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
   font-size: 0.72rem;
   font-weight: 700;
 }
@@ -1163,7 +1145,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
   font-weight: 700;
   text-decoration: none;
 }
@@ -1175,7 +1157,7 @@ p {
   align-items: center;
   gap: 14px;
   border: 1px solid var(--app-line);
-  border-radius: var(--uv-radius-sm);
+  border-radius: var(--nexus-radius-sm);
   background: #faf9f9;
   padding: 10px 12px;
   cursor: pointer;
@@ -1209,7 +1191,7 @@ p {
   height: 26px;
   border-radius: 20px;
   background: #b9b2b4;
-  transition: background-color var(--uv-duration-fast);
+  transition: background-color var(--nexus-duration-fast);
 }
 
 .switch::after {
@@ -1222,7 +1204,7 @@ p {
   border-radius: 50%;
   background: white;
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.24);
-  transition: transform var(--uv-duration-fast);
+  transition: transform var(--nexus-duration-fast);
 }
 
 .switch-row input:checked + .switch {
@@ -1234,13 +1216,13 @@ p {
 }
 
 .switch-row:has(input:focus-visible) {
-  outline: 3px solid color-mix(in srgb, var(--uv-color-teal), white 22%);
+  outline: 3px solid color-mix(in srgb, var(--nexus-color-teal), white 22%);
   outline-offset: 2px;
 }
 
 .reported-error-block {
   min-width: 0;
-  border-left: 4px solid var(--uv-color-gold);
+  border-left: 4px solid var(--nexus-color-gold);
   background: #f8f6f3;
   padding: 12px 14px;
 }
@@ -1278,7 +1260,7 @@ p {
 .registry-panel {
   min-width: 0;
   border: 1px solid var(--app-line);
-  border-radius: var(--uv-radius-md);
+  border-radius: var(--nexus-radius-md);
   background: white;
   overflow: hidden;
 }
@@ -1308,9 +1290,9 @@ p {
   height: 38px;
   display: grid;
   place-items: center;
-  border-radius: var(--uv-radius-sm);
-  background: var(--uv-color-primary-50);
-  color: var(--uv-color-primary);
+  border-radius: var(--nexus-radius-sm);
+  background: var(--nexus-color-primary-50);
+  color: var(--nexus-color-primary);
 }
 
 .count-badge {
@@ -1367,7 +1349,7 @@ p {
 }
 
 .registry-row strong {
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
   font-size: 0.75rem;
 }
 
@@ -1417,7 +1399,7 @@ p {
   width: 30px;
   height: 30px;
   border: 3px solid #ded9da;
-  border-top-color: var(--uv-color-primary);
+  border-top-color: var(--nexus-color-primary);
   border-radius: 50%;
   animation: spin 800ms linear infinite;
 }
@@ -1435,7 +1417,7 @@ p {
 }
 
 .state-code {
-  color: var(--uv-color-primary);
+  color: var(--nexus-color-primary);
   font-size: 3rem;
   font-weight: 700;
 }
@@ -1483,7 +1465,7 @@ p {
     width: min(86vw, 280px);
     height: 100dvh;
     transform: translateX(-105%);
-    transition: transform var(--uv-duration-base) var(--uv-ease-standard);
+    transition: transform var(--nexus-duration-base) var(--nexus-ease-standard);
   }
 
   .sidebar-open {
@@ -1552,8 +1534,8 @@ p {
     padding: 24px 20px;
   }
 
-  .auth-brand img {
-    width: 180px;
+  .auth-logo {
+    width: 196px;
   }
 
   .auth-heading h1 {

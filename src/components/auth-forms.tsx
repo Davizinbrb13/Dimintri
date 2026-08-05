@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useActionState, useState } from "react";
 import { Eye, EyeOff, LockKeyhole, Mail, Send, UserRound } from "lucide-react";
 import {
@@ -10,6 +9,7 @@ import {
 } from "@/app/(auth)/login/actions";
 import { initialActionState } from "@/lib/types";
 import { SubmitButton } from "@/components/submit-button";
+import { BrandLogo } from "@/components/brand-logo";
 
 export function AuthForms() {
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -26,14 +26,7 @@ export function AuthForms() {
     <main className="auth-page">
       <section className="auth-panel" aria-labelledby="auth-title">
         <div className="auth-brand">
-          <Image
-            src="/brand/univassouras-horizontal.png"
-            alt="Univassouras"
-            width={310}
-            height={84}
-            priority
-          />
-          <span className="auth-product">DIMI</span>
+          <BrandLogo className="auth-logo" priority />
         </div>
 
         <div className="auth-heading">
@@ -122,7 +115,7 @@ export function AuthForms() {
           ) : null}
 
           <SubmitButton className="button button-primary button-block">
-            {mode === "login" ? "Entrar no DIMI" : "Criar minha conta"}
+            {mode === "login" ? "Entrar no NexusTI" : "Criar minha conta"}
           </SubmitButton>
 
           {mode === "login" && signInState.requiresEmailConfirmation ? (

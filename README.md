@@ -1,12 +1,12 @@
-# DIMI
+# NexusTI
 
-CRM interno para organizacao das demandas de Tecnologia da Informacao da Univassouras.
+CRM interno para organizar chamados e demandas da equipe de Tecnologia da Informacao.
 
 ## Stack
 
 - Next.js 16 com App Router, Server Components e Server Actions.
 - Supabase Auth, Postgres e Row Level Security.
-- Identidade visual baseada no design system em `design-system-univassouras/`.
+- Identidade visual compartilhada em `design-system-nexusti/`.
 
 ## Desenvolvimento
 
@@ -14,7 +14,7 @@ CRM interno para organizacao das demandas de Tecnologia da Informacao da Univass
 2. Confirme as variaveis de `.env.local` usando `.env.example` como referencia.
 3. Execute `npm run dev` e abra `http://localhost:3000`.
 
-O projeto local ja esta conectado ao Supabase `dimi`. A chave usada no navegador e a chave publicavel; nenhuma chave secreta ou `service_role` faz parte do frontend.
+A chave usada no navegador e a chave publicavel do Supabase. Nenhuma chave secreta ou `service_role` faz parte do frontend.
 
 ## Contas e permissoes
 
@@ -35,7 +35,7 @@ Para producao, depois de cadastrar a equipe, desative novos cadastros publicos n
 - `tickets`: ocorrencia, diagnostico, solucao e tecnico responsavel.
 - `ticket_history`: snapshot automatico de cada criacao e alteracao.
 
-As migrations locais ficam em `supabase/migrations/` e ja foram aplicadas ao projeto remoto `dimi`.
+As migrations locais ficam em `supabase/migrations/` e devem ser aplicadas ao projeto configurado nas variaveis de ambiente.
 
 ## Validacao
 

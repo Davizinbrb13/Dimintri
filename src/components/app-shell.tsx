@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -13,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { signOutAction } from "@/app/(app)/actions";
+import { BrandLogo } from "@/components/brand-logo";
 import type { Profile } from "@/lib/types";
 import { initials } from "@/lib/format";
 
@@ -48,14 +48,7 @@ export function AppShell({ profile, children }: { profile: Profile; children: Re
 
       <aside className={`sidebar ${menuOpen ? "sidebar-open" : ""}`} aria-label="Navegacao principal">
         <div className="sidebar-brand">
-          <Image
-            src="/brand/univassouras-horizontal.png"
-            alt="Univassouras"
-            width={250}
-            height={68}
-            priority
-          />
-          <span>DIMI</span>
+          <BrandLogo className="sidebar-logo" priority />
           <button
             className="icon-button sidebar-close"
             type="button"
@@ -107,7 +100,7 @@ export function AppShell({ profile, children }: { profile: Profile; children: Re
         <header className="app-topbar">
           <div>
             <Settings2 size={17} aria-hidden="true" />
-            <span>Central de demandas de TI</span>
+            <span>NexusTI | Central de demandas</span>
           </div>
           <span className="environment-badge">Ambiente interno</span>
         </header>
