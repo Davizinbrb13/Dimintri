@@ -8,9 +8,33 @@ import {
   createSectorAction,
 } from "@/app/(app)/cadastros/actions";
 import { SubmitButton } from "@/components/submit-button";
-import { initialActionState, type ActionState, type Requester, type Sector } from "@/lib/types";
+import { EquipmentRegistry } from "@/components/equipment-registry";
+import {
+  initialActionState,
+  type ActionState,
+  type Campus,
+  type EquipmentAsset,
+  type EquipmentCategory,
+  type EquipmentModel,
+  type Requester,
+  type Sector,
+} from "@/lib/types";
 
-export function RegistryManager({ requesters, sectors }: { requesters: Requester[]; sectors: Sector[] }) {
+export function RegistryManager({
+  requesters,
+  sectors,
+  categories,
+  models,
+  equipment,
+  campuses,
+}: {
+  requesters: Requester[];
+  sectors: Sector[];
+  categories: EquipmentCategory[];
+  models: EquipmentModel[];
+  equipment: EquipmentAsset[];
+  campuses: Campus[];
+}) {
   const [query, setQuery] = useState("");
   const normalized = query.toLocaleLowerCase("pt-BR").trim();
   const filteredRequesters = useMemo(
@@ -31,7 +55,7 @@ export function RegistryManager({ requesters, sectors }: { requesters: Requester
         <div>
           <p className="eyebrow">Base de apoio</p>
           <h1>Cadastros auxiliares</h1>
-          <p>Mantenha matriculas e setores disponiveis para a abertura dos chamados.</p>
+          <p>Mantenha os dados usados nos chamados e no inventario de equipamentos.</p>
         </div>
       </div>
 
@@ -83,6 +107,13 @@ export function RegistryManager({ requesters, sectors }: { requesters: Requester
           </div>
         </RegistryPanel>
       </section>
+
+      <EquipmentRegistry
+        equipment={equipment}
+        categories={categories}
+        models={models}
+        campuses={campuses}
+      />
     </main>
   );
 }

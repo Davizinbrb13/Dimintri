@@ -1,6 +1,6 @@
 # NexusTI
 
-CRM interno para organizar chamados e demandas da equipe de Tecnologia da Informacao.
+Sistema interno para organizar chamados, equipamentos e movimentacoes da equipe de Tecnologia da Informacao.
 
 ## Stack
 
@@ -18,13 +18,16 @@ A chave usada no navegador e a chave publicavel do Supabase. Nenhuma chave secre
 
 ## Contas e permissoes
 
-- O primeiro usuario cadastrado recebe o papel `admin`.
-- Os demais usuarios recebem o papel `technician`.
+- Nao existe cadastro publico. Novas contas entram somente por convite de um administrador.
+- Todo usuario novo nasce como `technician`; a elevacao para `admin` ocorre apenas no servidor.
+- Cada convidado define a propria senha no link individual recebido por e-mail.
 - Tecnicos leem e alteram somente os proprios chamados.
 - Administradores acompanham toda a equipe.
 - As regras sao aplicadas por RLS no banco, alem da protecao das rotas no Next.js.
 
-Para producao, depois de cadastrar a equipe, desative novos cadastros publicos no painel do Supabase Auth ou adote um fluxo de convites.
+O cliente administrativo usa `SUPABASE_SECRET_KEY` somente em Server Actions. Essa chave nunca deve receber o prefixo `NEXT_PUBLIC_`.
+
+Consulte o roteiro completo em [`docs/production-checklist.md`](docs/production-checklist.md).
 
 ## Banco de dados
 
@@ -34,6 +37,13 @@ Para producao, depois de cadastrar a equipe, desative novos cadastros publicos n
 - `sectors`: setores sugeridos e cadastrados automaticamente.
 - `tickets`: ocorrencia, diagnostico, solucao e tecnico responsavel.
 - `ticket_history`: snapshot automatico de cada criacao e alteracao.
+- `equipment_categories`: classificacao opcional e reutilizavel dos modelos.
+- `equipment_models`: nome do equipamento compartilhado por varias unidades.
+- `equipment_assets`: unidade fisica identificada por serial unico.
+- `equipment_movements`: entrega, devolucao, transferencia, manutencao ou baixa.
+- `equipment_movement_items`: equipamentos e origem registrados em cada movimentacao.
+
+O cadastro de equipamentos aceita ate 200 seriais por lote. O nome e a categoria sao informados uma vez, enquanto cada serial gera uma unidade independente. Movimentacoes atualizam o inventario de forma transacional e preservam o historico.
 
 As migrations locais ficam em `supabase/migrations/` e devem ser aplicadas ao projeto configurado nas variaveis de ambiente.
 

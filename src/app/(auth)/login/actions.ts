@@ -1,21 +1,32 @@
 "use server";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl } from "@/lib/site-url";
 import type { ActionState } from "@/lib/types";
 
 const emailSchema = z.email("Informe um e-mail valido.");
 
 const signInSchema = z.object({
   email: emailSchema,
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
+  password: z.string().min(1, "Informe sua senha."),
 });
 
-const signUpSchema = signInSchema.extend({
-  fullName: z.string().trim().min(2, "Informe o nome completo.").max(120),
-});
+const passwordSchema = z
+  .string()
+  .min(8, "Use pelo menos 8 caracteres.")
+  .max(72, "A senha deve ter no maximo 72 caracteres.");
+
+const updatePasswordSchema = z
+  .object({
+    password: passwordSchema,
+    passwordConfirmation: z.string(),
+  })
+  .refine((value) => value.password === value.passwordConfirmation, {
+    message: "As senhas informadas nao coincidem.",
+    path: ["passwordConfirmation"],
+  });
 
 export async function signInAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = signInSchema.safeParse({
@@ -35,31 +46,47 @@ export async function signInAction(_: ActionState, formData: FormData): Promise<
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error) {
-    if (error.code === "email_not_confirmed") {
-      return {
-        status: "error",
-        message: "Seu e-mail ainda nao foi confirmado. Abra a mensagem enviada pelo Supabase ou reenvie a confirmacao abaixo.",
-        requiresEmailConfirmation: true,
-      };
-    }
-
     return {
       status: "error",
-      message:
-        error.code === "invalid_credentials"
-          ? "E-mail ou senha incorretos."
-          : "Nao foi possivel entrar agora. Tente novamente em instantes.",
+      message: "E-mail ou senha incorretos.",
     };
   }
 
   redirect("/dashboard");
 }
 
-export async function signUpAction(_: ActionState, formData: FormData): Promise<ActionState> {
-  const parsed = signUpSchema.safeParse({
-    fullName: formData.get("fullName"),
-    email: formData.get("email"),
+export async function requestPasswordResetAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = emailSchema.safeParse(formData.get("email"));
+
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "Revise o e-mail informado.",
+      fieldErrors: { email: parsed.error.issues.map((issue) => issue.message) },
+    };
+  }
+
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(parsed.data, {
+    redirectTo: `${getSiteUrl()}/auth/confirm?next=/redefinir-senha`,
+  });
+
+  return {
+    status: "success",
+    message: "Se o e-mail estiver cadastrado, enviaremos as instrucoes de recuperacao.",
+  };
+}
+
+export async function updatePasswordAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = updatePasswordSchema.safeParse({
     password: formData.get("password"),
+    passwordConfirmation: formData.get("passwordConfirmation"),
   });
 
   if (!parsed.success) {
@@ -70,73 +97,25 @@ export async function signUpAction(_: ActionState, formData: FormData): Promise<
     };
   }
 
-  const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin") ?? "http://localhost:3000";
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({
-    email: parsed.data.email,
-    password: parsed.data.password,
-    options: {
-      data: { full_name: parsed.data.fullName },
-      emailRedirectTo: `${origin}/auth/confirm`,
-    },
-  });
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+
+  if (claimsError || !claimsData?.claims?.sub) {
+    return {
+      status: "error",
+      message: "Este link expirou. Solicite um novo convite ou uma nova recuperacao de senha.",
+    };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
 
   if (error) {
     return {
       status: "error",
-      message: error.message.toLowerCase().includes("registered")
-        ? "Este e-mail ja possui uma conta."
-        : "Nao foi possivel criar a conta agora.",
+      message: "Nao foi possivel definir a senha. Tente novamente ou solicite um novo link.",
     };
   }
 
-  if (data.session) {
-    redirect("/dashboard");
-  }
-
-  return {
-    status: "success",
-    message: "Conta criada. Confira seu e-mail para confirmar o acesso.",
-  };
-}
-
-export async function resendConfirmationAction(
-  _: ActionState,
-  formData: FormData,
-): Promise<ActionState> {
-  const parsed = emailSchema.safeParse(formData.get("email"));
-
-  if (!parsed.success) {
-    return {
-      status: "error",
-      message: "Informe um e-mail valido para reenviar a confirmacao.",
-    };
-  }
-
-  const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin") ?? "http://localhost:3000";
-  const supabase = await createClient();
-  const { error } = await supabase.auth.resend({
-    type: "signup",
-    email: parsed.data,
-    options: {
-      emailRedirectTo: `${origin}/auth/confirm`,
-    },
-  });
-
-  if (error) {
-    return {
-      status: "error",
-      message:
-        error.code === "over_email_send_rate_limit"
-          ? "Muitos envios em pouco tempo. Aguarde um minuto e tente novamente."
-          : "Nao foi possivel reenviar a confirmacao agora.",
-    };
-  }
-
-  return {
-    status: "success",
-    message: "Confirmacao reenviada. Confira a caixa de entrada e o spam.",
-  };
+  await supabase.auth.signOut({ scope: "others" });
+  redirect("/dashboard");
 }

@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
+  ArrowLeftRight,
   ClipboardList,
   LayoutDashboard,
   LogOut,
   Menu,
   Settings2,
+  UsersRound,
   X,
 } from "lucide-react";
 import { signOutAction } from "@/app/(app)/actions";
@@ -18,6 +20,7 @@ import { initials } from "@/lib/format";
 
 const navItems = [
   { href: "/dashboard", label: "Painel", icon: LayoutDashboard },
+  { href: "/movimentacoes", label: "Movimentacoes", icon: ArrowLeftRight },
   { href: "/cadastros", label: "Cadastros", icon: ClipboardList },
 ];
 
@@ -27,16 +30,6 @@ export function AppShell({ profile, children }: { profile: Profile; children: Re
 
   return (
     <div className="app-shell">
-      <button
-        className="mobile-menu-button icon-button"
-        type="button"
-        onClick={() => setMenuOpen(true)}
-        aria-label="Abrir menu"
-        title="Abrir menu"
-      >
-        <Menu size={22} />
-      </button>
-
       {menuOpen ? (
         <button
           className="sidebar-backdrop"
@@ -64,7 +57,7 @@ export function AppShell({ profile, children }: { profile: Profile; children: Re
           <span className="sidebar-section-label">Operacao</span>
           {navItems.map((item) => {
             const Icon = item.icon;
-            const active = pathname === item.href;
+            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}
@@ -78,6 +71,17 @@ export function AppShell({ profile, children }: { profile: Profile; children: Re
               </Link>
             );
           })}
+          {profile.role === "admin" ? (
+            <Link
+              href="/equipe"
+              className={pathname === "/equipe" || pathname.startsWith("/equipe/") ? "active" : ""}
+              aria-current={pathname === "/equipe" || pathname.startsWith("/equipe/") ? "page" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              <UsersRound size={19} aria-hidden="true" />
+              Equipe
+            </Link>
+          ) : null}
         </nav>
 
         <div className="sidebar-account">
@@ -98,9 +102,20 @@ export function AppShell({ profile, children }: { profile: Profile; children: Re
 
       <div className="app-content">
         <header className="app-topbar">
-          <div>
-            <Settings2 size={17} aria-hidden="true" />
-            <span>NexusTI | Central de demandas</span>
+          <div className="app-topbar-leading">
+            <button
+              className="mobile-menu-button icon-button"
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Abrir menu"
+              title="Abrir menu"
+            >
+              <Menu size={22} aria-hidden="true" />
+            </button>
+            <div className="app-topbar-title">
+              <Settings2 size={17} aria-hidden="true" />
+              <span>NexusTI | Central de demandas</span>
+            </div>
           </div>
           <span className="environment-badge">Ambiente interno</span>
         </header>

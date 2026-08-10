@@ -1,0 +1,238 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useMemo, useRef, useState } from "react";
+import { Boxes, ListPlus, PackagePlus, Search } from "lucide-react";
+import { registerEquipmentAction } from "@/app/(app)/cadastros/actions";
+import { SubmitButton } from "@/components/submit-button";
+import { equipmentStatusLabels } from "@/lib/equipment";
+import {
+  initialActionState,
+  type ActionState,
+  type Campus,
+  type EquipmentAsset,
+  type EquipmentCategory,
+  type EquipmentModel,
+} from "@/lib/types";
+
+type RegistrationMode = "single" | "batch";
+
+export function EquipmentRegistry({
+  equipment,
+  categories,
+  models,
+  campuses,
+}: {
+  equipment: EquipmentAsset[];
+  categories: EquipmentCategory[];
+  models: EquipmentModel[];
+  campuses: Campus[];
+}) {
+  const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [mode, setMode] = useState<RegistrationMode>("single");
+  const [query, setQuery] = useState("");
+  const [serials, setSerials] = useState("");
+  const [state, setState] = useState<ActionState>(initialActionState);
+
+  const filteredEquipment = useMemo(() => {
+    const normalized = query.toLocaleLowerCase("pt-BR").trim();
+    if (!normalized) return equipment;
+    return equipment.filter((asset) =>
+      [
+        asset.serial_number,
+        asset.model.name,
+        asset.model.category?.name,
+        asset.current_campus?.name,
+        asset.current_sector?.name,
+        asset.current_requester?.full_name,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLocaleLowerCase("pt-BR")
+        .includes(normalized),
+    );
+  }, [equipment, query]);
+
+  const serialCount = serials
+    .split(/[\r\n,;]+/)
+    .map((serial) => serial.trim())
+    .filter(Boolean).length;
+
+  async function submit(formData: FormData) {
+    const result = await registerEquipmentAction(initialActionState, formData);
+    setState(result);
+    if (result.status === "success") {
+      formRef.current?.reset();
+      setSerials("");
+      router.refresh();
+    }
+  }
+
+  return (
+    <section className="equipment-registry">
+      <header className="equipment-registry-header">
+        <span className="registry-icon"><Boxes size={20} aria-hidden="true" /></span>
+        <div>
+          <h2>Equipamentos</h2>
+          <p>O nome e a categoria sao compartilhados; cada unidade possui um serial unico.</p>
+        </div>
+        <span className="count-badge">{equipment.length}</span>
+      </header>
+
+      <div className="equipment-registry-content">
+        <div className="equipment-form-column">
+          <div className="segmented-control equipment-mode" aria-label="Modo de cadastro">
+            <button type="button" aria-pressed={mode === "single"} onClick={() => setMode("single")}>
+              <PackagePlus size={17} aria-hidden="true" /> Individual
+            </button>
+            <button type="button" aria-pressed={mode === "batch"} onClick={() => setMode("batch")}>
+              <ListPlus size={17} aria-hidden="true" /> Em lote
+            </button>
+          </div>
+
+          <form ref={formRef} action={submit} className="equipment-form form-stack">
+            <div className="field">
+              <label htmlFor={`equipment-model-${mode}`}>Nome do equipamento</label>
+              <input
+                id={`equipment-model-${mode}`}
+                name="modelName"
+                list="equipment-model-options"
+                placeholder="Ex.: Tablet Samsung Galaxy Tab A9"
+                aria-invalid={Boolean(state.fieldErrors?.modelName)}
+                required
+              />
+              <datalist id="equipment-model-options">
+                {models.map((model) => <option key={model.id} value={model.name} />)}
+              </datalist>
+              <FieldError value={state.fieldErrors?.modelName?.[0]} />
+            </div>
+
+            <div className="form-grid compact-form-grid">
+              <div className="field">
+                <label htmlFor={`equipment-category-${mode}`}>Categoria <span className="optional-label">Opcional</span></label>
+                <input
+                  id={`equipment-category-${mode}`}
+                  name="categoryName"
+                  list="equipment-category-options"
+                  placeholder="Ex.: Tablet"
+                  aria-invalid={Boolean(state.fieldErrors?.categoryName)}
+                />
+                <datalist id="equipment-category-options">
+                  {categories.map((category) => <option key={category.id} value={category.name} />)}
+                </datalist>
+                <span className="field-help">Categorias novas sao criadas automaticamente.</span>
+              </div>
+
+              <div className="field">
+                <label htmlFor={`equipment-campus-${mode}`}>Campus inicial <span className="optional-label">Opcional</span></label>
+                <select id={`equipment-campus-${mode}`} name="initialCampusId" defaultValue="">
+                  <option value="">Nao informado</option>
+                  {campuses.map((campus) => <option key={campus.id} value={campus.id}>{campus.name}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div className="field">
+              <label htmlFor={`equipment-serials-${mode}`}>
+                {mode === "single" ? "Numero de serial" : "Numeros de serial"}
+              </label>
+              {mode === "single" ? (
+                <input
+                  id={`equipment-serials-${mode}`}
+                  name="serials"
+                  value={serials}
+                  onChange={(event) => setSerials(event.target.value.toUpperCase())}
+                  placeholder="Ex.: SN-A9-001"
+                  aria-invalid={Boolean(state.fieldErrors?.serials)}
+                  required
+                />
+              ) : (
+                <textarea
+                  id={`equipment-serials-${mode}`}
+                  name="serials"
+                  value={serials}
+                  onChange={(event) => setSerials(event.target.value.toUpperCase())}
+                  rows={7}
+                  placeholder={"SN-A9-001\nSN-A9-002\nSN-A9-003"}
+                  aria-invalid={Boolean(state.fieldErrors?.serials)}
+                  required
+                />
+              )}
+              <span className="field-help">
+                {mode === "batch" ? `${serialCount} ${serialCount === 1 ? "serial identificado" : "seriais identificados"}. Use um por linha.` : "Letras, numeros e separadores comuns sao aceitos."}
+              </span>
+              <FieldError value={state.fieldErrors?.serials?.[0]} />
+            </div>
+
+            <div className="field">
+              <label htmlFor={`equipment-notes-${mode}`}>Observacoes <span className="optional-label">Opcional</span></label>
+              <textarea id={`equipment-notes-${mode}`} name="notes" rows={3} placeholder="Informacoes comuns a estes equipamentos." />
+            </div>
+
+            {state.message ? (
+              <p className={`form-message form-message-${state.status}`} role="status">{state.message}</p>
+            ) : null}
+
+            <SubmitButton pendingLabel={mode === "batch" ? "Cadastrando lote" : "Cadastrando equipamento"}>
+              {mode === "batch" ? <ListPlus size={18} aria-hidden="true" /> : <PackagePlus size={18} aria-hidden="true" />}
+              {mode === "batch" ? "Cadastrar lote" : "Cadastrar equipamento"}
+            </SubmitButton>
+          </form>
+        </div>
+
+        <div className="equipment-list-column">
+          <div className="equipment-list-toolbar">
+            <div className="search-control">
+              <Search size={18} aria-hidden="true" />
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Buscar serial, nome, categoria ou local"
+                aria-label="Buscar equipamentos"
+              />
+            </div>
+          </div>
+
+          <div className="equipment-table" role="table" aria-label="Equipamentos cadastrados">
+            <div className="equipment-table-head" role="row">
+              <span role="columnheader">Serial</span>
+              <span role="columnheader">Equipamento</span>
+              <span role="columnheader">Categoria</span>
+              <span role="columnheader">Situacao</span>
+              <span role="columnheader">Local</span>
+            </div>
+            <div className="equipment-table-body" role="rowgroup">
+              {filteredEquipment.length ? filteredEquipment.map((asset) => (
+                <div className="equipment-table-row" role="row" key={asset.id}>
+                  <strong role="cell" data-label="Serial">{asset.serial_number}</strong>
+                  <span role="cell" data-label="Equipamento">{asset.model.name}</span>
+                  <span role="cell" data-label="Categoria">
+                    <span className={`category-badge ${asset.model.category ? "" : "category-badge-empty"}`}>
+                      {asset.model.category?.name ?? "Sem categoria"}
+                    </span>
+                  </span>
+                  <span role="cell" data-label="Situacao">
+                    <span className={`equipment-status status-${asset.status}`}>{equipmentStatusLabels[asset.status]}</span>
+                  </span>
+                  <span role="cell" data-label="Local">{equipmentLocation(asset)}</span>
+                </div>
+              )) : (
+                <p className="registry-empty">Nenhum equipamento encontrado.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function equipmentLocation(asset: EquipmentAsset) {
+  return [asset.current_campus?.name, asset.current_sector?.name].filter(Boolean).join(" / ") || "Nao informado";
+}
+
+function FieldError({ value }: { value?: string }) {
+  return value ? <span className="field-error">{value}</span> : null;
+}

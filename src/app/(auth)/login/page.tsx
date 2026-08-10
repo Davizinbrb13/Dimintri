@@ -2,7 +2,11 @@ import { redirect } from "next/navigation";
 import { AuthForms } from "@/components/auth-forms";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ auth_error?: string }>;
+}) {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
 
@@ -10,5 +14,6 @@ export default async function LoginPage() {
     redirect("/dashboard");
   }
 
-  return <AuthForms />;
+  const params = await searchParams;
+  return <AuthForms linkError={params.auth_error === "invalid-link"} />;
 }

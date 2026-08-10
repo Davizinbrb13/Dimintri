@@ -41,6 +41,295 @@ export type Database = {
         }
         Relationships: []
       }
+      equipment_assets: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          current_campus_id: number | null
+          current_requester_id: number | null
+          current_sector_id: number | null
+          id: number
+          model_id: number
+          notes: string | null
+          serial_number: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          current_campus_id?: number | null
+          current_requester_id?: number | null
+          current_sector_id?: number | null
+          id?: never
+          model_id: number
+          notes?: string | null
+          serial_number: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          current_campus_id?: number | null
+          current_requester_id?: number | null
+          current_sector_id?: number | null
+          id?: never
+          model_id?: number
+          notes?: string | null
+          serial_number?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_assets_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_assets_current_campus_id_fkey"
+            columns: ["current_campus_id"]
+            isOneToOne: false
+            referencedRelation: "campuses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_assets_current_requester_id_fkey"
+            columns: ["current_requester_id"]
+            isOneToOne: false
+            referencedRelation: "requesters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_assets_current_sector_id_fkey"
+            columns: ["current_sector_id"]
+            isOneToOne: false
+            referencedRelation: "sectors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_assets_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_models"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment_categories: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: number
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: never
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: never
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_categories_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment_models: {
+        Row: {
+          category_id: number | null
+          created_at: string
+          created_by: string | null
+          id: number
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: never
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: never
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_models_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_models_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment_movement_items: {
+        Row: {
+          asset_id: number
+          created_at: string
+          id: number
+          movement_id: number
+          origin_campus_id: number | null
+          origin_requester_id: number | null
+          origin_sector_id: number | null
+          previous_status: string
+        }
+        Insert: {
+          asset_id: number
+          created_at?: string
+          id?: never
+          movement_id: number
+          origin_campus_id?: number | null
+          origin_requester_id?: number | null
+          origin_sector_id?: number | null
+          previous_status: string
+        }
+        Update: {
+          asset_id?: number
+          created_at?: string
+          id?: never
+          movement_id?: number
+          origin_campus_id?: number | null
+          origin_requester_id?: number | null
+          origin_sector_id?: number | null
+          previous_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_movement_items_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_movement_items_movement_id_fkey"
+            columns: ["movement_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_movements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_movement_items_origin_campus_id_fkey"
+            columns: ["origin_campus_id"]
+            isOneToOne: false
+            referencedRelation: "campuses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_movement_items_origin_requester_id_fkey"
+            columns: ["origin_requester_id"]
+            isOneToOne: false
+            referencedRelation: "requesters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_movement_items_origin_sector_id_fkey"
+            columns: ["origin_sector_id"]
+            isOneToOne: false
+            referencedRelation: "sectors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment_movements: {
+        Row: {
+          created_at: string
+          destination_campus_id: number | null
+          destination_sector_id: number | null
+          id: number
+          movement_type: string
+          notes: string | null
+          requester_id: number
+          technician_id: string
+        }
+        Insert: {
+          created_at?: string
+          destination_campus_id?: number | null
+          destination_sector_id?: number | null
+          id?: never
+          movement_type: string
+          notes?: string | null
+          requester_id: number
+          technician_id?: string
+        }
+        Update: {
+          created_at?: string
+          destination_campus_id?: number | null
+          destination_sector_id?: number | null
+          id?: never
+          movement_type?: string
+          notes?: string | null
+          requester_id?: number
+          technician_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_movements_destination_campus_id_fkey"
+            columns: ["destination_campus_id"]
+            isOneToOne: false
+            referencedRelation: "campuses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_movements_destination_sector_id_fkey"
+            columns: ["destination_sector_id"]
+            isOneToOne: false
+            referencedRelation: "sectors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_movements_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "requesters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_movements_technician_id_fkey"
+            columns: ["technician_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -265,7 +554,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_equipment_movement: {
+        Args: {
+          p_asset_ids: number[]
+          p_destination_campus_id?: number | null
+          p_destination_sector_id?: number | null
+          p_movement_type: string
+          p_notes?: string | null
+          p_requester_id: number
+        }
+        Returns: number
+      }
+      register_equipment_assets: {
+        Args: {
+          p_category_name?: string | null
+          p_initial_campus_id?: number | null
+          p_model_name: string
+          p_notes?: string | null
+          p_serial_numbers: string[]
+        }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

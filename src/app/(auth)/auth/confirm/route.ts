@@ -7,7 +7,12 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code");
   const tokenHash = url.searchParams.get("token_hash");
   const type = url.searchParams.get("type") as EmailOtpType | null;
-  const requestedNext = url.searchParams.get("next") ?? "/dashboard";
+  const defaultNext = type === "invite"
+    ? "/definir-senha"
+    : type === "recovery"
+      ? "/redefinir-senha"
+      : "/dashboard";
+  const requestedNext = url.searchParams.get("next") ?? defaultNext;
   const next = requestedNext.startsWith("/") && !requestedNext.startsWith("//")
     ? requestedNext
     : "/dashboard";
@@ -25,5 +30,5 @@ export async function GET(request: Request) {
     error = new Error("Parametros de confirmacao ausentes.");
   }
 
-  return NextResponse.redirect(new URL(error ? "/login?confirm=error" : next, url.origin));
+  return NextResponse.redirect(new URL(error ? "/login?auth_error=invalid-link" : next, url.origin));
 }
