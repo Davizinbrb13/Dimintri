@@ -16,6 +16,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     .from("profiles")
     .select("id, full_name, email, role")
     .eq("id", claimsData.claims.sub)
+    .is("access_revoked_at", null)
     .single();
 
   if (profileError || !profile) {

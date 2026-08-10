@@ -30,11 +30,12 @@ export default async function TeamPage() {
   const { data: members, error } = await supabase
     .from("profiles")
     .select("id, full_name, email, role, created_at")
+    .is("access_revoked_at", null)
     .order("created_at");
 
   if (error) {
     throw new Error("Nao foi possivel carregar a equipe.");
   }
 
-  return <TeamManager members={(members ?? []) as TeamMember[]} />;
+  return <TeamManager members={(members ?? []) as TeamMember[]} currentUserId={userId} />;
 }

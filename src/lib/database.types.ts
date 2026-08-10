@@ -332,6 +332,8 @@ export type Database = {
       }
       profiles: {
         Row: {
+          access_revoked_at: string | null
+          access_revoked_by: string | null
           created_at: string
           email: string | null
           full_name: string
@@ -340,6 +342,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          access_revoked_at?: string | null
+          access_revoked_by?: string | null
           created_at?: string
           email?: string | null
           full_name: string
@@ -348,6 +352,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          access_revoked_at?: string | null
+          access_revoked_by?: string | null
           created_at?: string
           email?: string | null
           full_name?: string
@@ -355,7 +361,15 @@ export type Database = {
           role?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_access_revoked_by_fkey"
+            columns: ["access_revoked_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       requesters: {
         Row: {

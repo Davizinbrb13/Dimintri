@@ -174,6 +174,15 @@ p {
   color: var(--nexus-color-primary);
 }
 
+.button-danger {
+  background: #9b1c25;
+  color: white;
+}
+
+.button-danger:hover:not(:disabled) {
+  background: #7c141c;
+}
+
 .button-block {
   width: 100%;
 }
@@ -195,9 +204,14 @@ p {
   cursor: pointer;
 }
 
-.icon-button:hover {
+.icon-button:hover:not(:disabled) {
   background: var(--nexus-color-primary-50);
   color: var(--nexus-color-primary);
+}
+
+.icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
 }
 
 .icon-button-small {
@@ -1487,7 +1501,7 @@ p {
 .team-list-row {
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(220px, 1.25fr) minmax(150px, 0.75fr) 150px;
+  grid-template-columns: minmax(180px, 1fr) minmax(220px, 1.25fr) minmax(150px, 0.75fr) 150px 86px;
   align-items: center;
   gap: 14px;
 }
@@ -1519,6 +1533,16 @@ p {
   overflow-wrap: anywhere;
 }
 
+.team-update-status {
+  margin: 0;
+  border-bottom: 1px solid #dcebd5;
+  background: #f3faef;
+  padding: 9px 18px;
+  color: #356324;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
 .team-member-name {
   display: flex;
   align-items: center;
@@ -1530,6 +1554,47 @@ p {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.team-member-name-editing {
+  align-items: flex-start;
+}
+
+.team-name-field {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.team-name-field input {
+  min-height: 38px;
+  padding: 0.48rem 0.65rem;
+}
+
+.team-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.team-name-save {
+  color: #356324;
+}
+
+.team-name-save:hover:not(:disabled) {
+  background: #f1faed;
+  color: #356324;
+}
+
+.team-delete-trigger {
+  color: #8b252b;
+}
+
+.team-delete-trigger:hover:not(:disabled) {
+  background: #fff2f2;
+  color: #8b252b;
 }
 
 .team-role {
@@ -1549,6 +1614,55 @@ p {
 .team-role-admin {
   background: var(--nexus-color-primary-50);
   color: var(--nexus-color-primary);
+}
+
+.team-delete-dialog {
+  width: min(calc(100% - 32px), 540px);
+}
+
+.team-delete-dialog .dialog-panel {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.team-delete-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.team-delete-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--nexus-radius-sm);
+  background: #fff2f2;
+  color: #9b1c25;
+}
+
+.team-delete-body h3 {
+  margin: 0 0 5px;
+  font-size: 1rem;
+}
+
+.team-delete-body p {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 0.84rem;
+}
+
+.team-delete-body small {
+  display: block;
+  margin-top: 10px;
+  color: #514a4c;
+  font-size: 0.76rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.team-delete-error {
+  grid-column: 1 / -1;
 }
 
 /* Equipment registry */
@@ -2562,8 +2676,29 @@ p {
     text-transform: uppercase;
   }
 
-  .team-member-name {
+  .team-list-row > .team-member-name {
     display: grid;
+    grid-template-columns: 90px auto minmax(0, 1fr);
+  }
+
+  .team-list-row > .team-row-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .team-list-row > .team-row-actions::before {
+    margin-right: auto;
+  }
+
+  .team-delete-dialog {
+    width: calc(100% - 24px);
+    max-height: min(90dvh, 540px);
+  }
+
+  .team-delete-dialog .dialog-panel {
+    min-height: 0;
+    max-height: min(90dvh, 540px);
+    border-radius: var(--nexus-radius-md);
   }
 }
 
