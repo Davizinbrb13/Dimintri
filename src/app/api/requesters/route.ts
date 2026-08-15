@@ -19,16 +19,30 @@ export async function GET(request: Request) {
     return NextResponse.json({ requesters: [] });
   }
 
-  const { data, error } = await supabase
-    .from("requesters")
-    .select("id, registration, full_name")
-    .ilike("registration", `${query}%`)
-    .order("registration")
-    .limit(8);
+  const [registrationResult, nameResult] = await Promise.all([
+    supabase
+      .from("requesters")
+      .select("id, registration, full_name")
+      .ilike("registration", `${query}%`)
+      .order("registration")
+      .limit(8),
+    supabase
+      .from("requesters")
+      .select("id, registration, full_name")
+      .ilike("full_name", `%${query}%`)
+      .order("full_name")
+      .limit(8),
+  ]);
 
-  if (error) {
+  if (registrationResult.error || nameResult.error) {
     return NextResponse.json({ requesters: [] }, { status: 500 });
   }
 
-  return NextResponse.json({ requesters: data });
+  const requesters = [...registrationResult.data ?? [], ...nameResult.data ?? []]
+    .filter((requester, index, values) =>
+      values.findIndex((candidate) => candidate.id === requester.id) === index,
+    )
+    .slice(0, 8);
+
+  return NextResponse.json({ requesters });
 }

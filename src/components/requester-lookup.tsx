@@ -55,7 +55,7 @@ export function RequesterLookup({ error }: { error?: string }) {
 
   return (
     <div className="field autocomplete-field">
-      <label htmlFor="requesterRegistration">Matricula do solicitante</label>
+      <label htmlFor="requesterRegistration">Matricula ou nome do solicitante</label>
       <div className="input-with-icon">
         {loading ? (
           <LoaderCircle className="spin" size={18} aria-hidden="true" />
@@ -67,11 +67,11 @@ export function RequesterLookup({ error }: { error?: string }) {
           name="requesterRegistration"
           value={query}
           onChange={(event) => {
-            setQuery(event.target.value.toUpperCase());
+            setQuery(event.target.value);
             setSelected(null);
             setResults([]);
           }}
-          placeholder="Digite a matricula"
+          placeholder="Digite a matricula ou nome"
           autoComplete="off"
           aria-invalid={Boolean(error)}
           aria-describedby={error ? "requesterRegistration-error" : "requesterRegistration-help"}
@@ -109,7 +109,7 @@ export function RequesterLookup({ error }: { error?: string }) {
         </div>
       ) : query.length > 0 && !loading && results.length === 0 ? (
         <div className="lookup-empty" id="requesterRegistration-help">
-          <span>Matricula ainda nao localizada.</span>
+          <span>Solicitante ainda nao localizado.</span>
           <Link href="/cadastros">
             <UserPlus size={16} aria-hidden="true" />
             Cadastrar
@@ -117,7 +117,7 @@ export function RequesterLookup({ error }: { error?: string }) {
         </div>
       ) : (
         <span className="field-help" id="requesterRegistration-help">
-          O nome sera preenchido a partir do banco de dados.
+          Pesquise pela matricula ou nome e selecione o solicitante.
         </span>
       )}
 
