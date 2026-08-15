@@ -92,7 +92,7 @@ export type EquipmentMovement = {
   movement_type: EquipmentMovementType;
   notes: string | null;
   requester: Requester;
-  technician: Pick<Profile, "id" | "full_name">;
+  technician: Pick<Profile, "id" | "full_name"> | null;
   destination_campus: Pick<Campus, "id" | "name"> | null;
   destination_sector: Sector | null;
   items: EquipmentMovementItem[];

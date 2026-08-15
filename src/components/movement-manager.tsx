@@ -79,7 +79,7 @@ export function MovementManager({
         movement.id,
         movement.requester.registration,
         movement.requester.full_name,
-        movement.technician.full_name,
+        movement.technician?.full_name,
         movement.destination_campus?.name,
         movement.destination_sector?.name,
         ...movement.items.flatMap((item) => [item.asset.serial_number, item.asset.model.name, item.asset.model.category?.name]),
@@ -187,7 +187,7 @@ function MovementList({ movements, onOpen }: { movements: EquipmentMovement[]; o
             <span className="movement-requester" data-label="Solicitante"><strong>{movement.requester.full_name}</strong><small>{movement.requester.registration}</small></span>
             <span className="movement-equipment-summary" data-label="Equipamentos">{equipmentSummary(movement)}</span>
             <span data-label="Destino">{movementDestination(movement)}</span>
-            <span data-label="Tecnico">{movement.technician.full_name}</span>
+            <span data-label="Tecnico">{movementTechnicianName(movement)}</span>
             <ChevronRight size={18} aria-hidden="true" />
           </button>
         ))}
@@ -464,7 +464,7 @@ function MovementDetailsDialog({ movement, onClose }: { movement: EquipmentMovem
         <DialogHeader eyebrow={`Movimentacao #${movement.id}`} title={movementTypeLabels[movement.movement_type]} description={`${movement.requester.full_name} - ${movement.requester.registration}`} onClose={() => dialogRef.current?.close()} />
         <div className="ticket-summary-strip">
           <span><CalendarClock size={15} /> {formatDateTime(movement.created_at)}</span>
-          <span><UserRound size={15} /> {movement.technician.full_name}</span>
+          <span><UserRound size={15} /> {movementTechnicianName(movement)}</span>
           <span><MapPin size={15} /> {movementDestination(movement)}</span>
         </div>
         <div className="dialog-body form-stack">
@@ -510,6 +510,10 @@ function MovementTypeBadge({ type }: { type: EquipmentMovementType }) {
 function movementDestination(movement: EquipmentMovement) {
   if (movement.movement_type === "retirement") return "Baixa do inventario";
   return [movement.destination_campus?.name, movement.destination_sector?.name].filter(Boolean).join(" / ") || "Nao informado";
+}
+
+function movementTechnicianName(movement: EquipmentMovement) {
+  return movement.technician?.full_name ?? "Tecnico indisponivel";
 }
 
 function movementOrigin(item: EquipmentMovement["items"][number]) {
