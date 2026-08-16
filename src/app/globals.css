@@ -1402,7 +1402,7 @@ p {
 .registry-row {
   min-height: 52px;
   display: grid;
-  grid-template-columns: minmax(100px, 0.35fr) minmax(0, 1fr);
+  grid-template-columns: minmax(100px, 0.35fr) minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
   border-bottom: 1px solid var(--app-line-soft);
@@ -1427,11 +1427,61 @@ p {
 }
 
 .registry-list-single .registry-row {
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
 .registry-row small {
   color: var(--app-muted);
+}
+
+.registry-row-actions,
+.equipment-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  overflow: visible !important;
+}
+
+.registry-remove-trigger {
+  color: var(--nexus-color-primary);
+}
+
+.registry-delete-dialog .dialog-panel {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.registry-delete-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.registry-delete-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: var(--nexus-radius-sm);
+  background: #fff0ef;
+  color: var(--nexus-color-primary);
+}
+
+.registry-delete-body h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.registry-delete-body p {
+  margin: 0;
+  color: var(--app-muted);
+  line-height: 1.55;
+}
+
+.registry-delete-body .form-message {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
 .registry-empty {
@@ -1747,7 +1797,7 @@ p {
 .equipment-table-row {
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(105px, 0.8fr) minmax(150px, 1.3fr) minmax(100px, 0.8fr) minmax(100px, 0.75fr) minmax(120px, 1fr);
+  grid-template-columns: minmax(105px, 0.8fr) minmax(150px, 1.3fr) minmax(100px, 0.8fr) minmax(100px, 0.75fr) minmax(120px, 1fr) auto;
   align-items: center;
   gap: 12px;
 }
@@ -2583,8 +2633,12 @@ p {
   }
 
   .registry-row {
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: 96px minmax(0, 1fr) auto;
     padding-inline: 14px;
+  }
+
+  .registry-list-single .registry-row {
+    grid-template-columns: minmax(0, 1fr) auto auto;
   }
 
   .equipment-registry-header {
@@ -2619,6 +2673,12 @@ p {
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
+  }
+
+  .equipment-table-row > .equipment-row-actions {
+    display: flex;
+    grid-template-columns: none;
+    align-items: center;
   }
 
   .movement-list-row {

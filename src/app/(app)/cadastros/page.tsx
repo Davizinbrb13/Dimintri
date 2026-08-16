@@ -20,6 +20,7 @@ export default async function RegistriesPage() {
     supabase
       .from("requesters")
       .select("id, registration, full_name")
+      .eq("is_active", true)
       .order("created_at", { ascending: false })
       .limit(200),
     supabase
@@ -43,6 +44,7 @@ export default async function RegistriesPage() {
       .select(
         "id, serial_number, status, notes, created_at, model:equipment_models!inner(id, name, category:equipment_categories(id, name)), current_requester:requesters(id, registration, full_name), current_campus:campuses(id, name), current_sector:sectors(id, name)",
       )
+      .eq("is_active", true)
       .order("created_at", { ascending: false })
       .limit(500),
     supabase

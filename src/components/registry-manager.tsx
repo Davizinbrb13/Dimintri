@@ -1,11 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
-import { Building, Search, UserPlus } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Building, Check, LoaderCircle, Pencil, Search, Trash2, TriangleAlert, UserPlus, X } from "lucide-react";
 import {
   createRequesterAction,
   createSectorAction,
+  deactivateRequesterAction,
+  deactivateSectorAction,
+  updateRequesterAction,
+  updateSectorAction,
 } from "@/app/(app)/cadastros/actions";
 import { SubmitButton } from "@/components/submit-button";
 import { EquipmentRegistry } from "@/components/equipment-registry";
@@ -19,6 +23,10 @@ import {
   type Requester,
   type Sector,
 } from "@/lib/types";
+
+type RegistryRemoval =
+  | { kind: "requester"; record: Requester }
+  | { kind: "sector"; record: Sector };
 
 export function RegistryManager({
   requesters,
@@ -36,6 +44,9 @@ export function RegistryManager({
   campuses: Campus[];
 }) {
   const [query, setQuery] = useState("");
+  const [editingRequester, setEditingRequester] = useState<Requester | null>(null);
+  const [editingSector, setEditingSector] = useState<Sector | null>(null);
+  const [pendingRemoval, setPendingRemoval] = useState<RegistryRemoval | null>(null);
   const normalized = query.toLocaleLowerCase("pt-BR").trim();
   const filteredRequesters = useMemo(
     () =>
@@ -85,6 +96,11 @@ export function RegistryManager({
               <div className="registry-row" key={requester.id} role="listitem">
                 <strong>{requester.registration}</strong>
                 <span>{requester.full_name}</span>
+                <RegistryRowActions
+                  label={requester.full_name}
+                  onEdit={() => setEditingRequester(requester)}
+                  onRemove={() => setPendingRemoval({ kind: "requester", record: requester })}
+                />
               </div>
             )) : <EmptyRegistry />}
           </div>
@@ -102,6 +118,11 @@ export function RegistryManager({
               <div className="registry-row" key={sector.id} role="listitem">
                 <span>{sector.name}</span>
                 <small>#{sector.id}</small>
+                <RegistryRowActions
+                  label={sector.name}
+                  onEdit={() => setEditingSector(sector)}
+                  onRemove={() => setPendingRemoval({ kind: "sector", record: sector })}
+                />
               </div>
             )) : <EmptyRegistry />}
           </div>
@@ -114,7 +135,24 @@ export function RegistryManager({
         models={models}
         campuses={campuses}
       />
+
+      {editingRequester ? <RequesterEditDialog requester={editingRequester} onClose={() => setEditingRequester(null)} /> : null}
+      {editingSector ? <SectorEditDialog sector={editingSector} onClose={() => setEditingSector(null)} /> : null}
+      {pendingRemoval ? <RegistryRemovalDialog removal={pendingRemoval} onClose={() => setPendingRemoval(null)} /> : null}
     </main>
+  );
+}
+
+function RegistryRowActions({ label, onEdit, onRemove }: { label: string; onEdit: () => void; onRemove: () => void }) {
+  return (
+    <span className="registry-row-actions">
+      <button className="icon-button icon-button-small" type="button" onClick={onEdit} aria-label={`Editar ${label}`} title="Editar">
+        <Pencil size={16} aria-hidden="true" />
+      </button>
+      <button className="icon-button icon-button-small registry-remove-trigger" type="button" onClick={onRemove} aria-label={`Remover ${label}`} title="Remover">
+        <Trash2 size={16} aria-hidden="true" />
+      </button>
+    </span>
   );
 }
 
@@ -223,4 +261,164 @@ function ActionMessage({ state }: { state: ActionState }) {
 
 function EmptyRegistry() {
   return <p className="registry-empty">Nenhum cadastro encontrado.</p>;
+}
+
+function RequesterEditDialog({ requester, onClose }: { requester: Requester; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const router = useRouter();
+  const [state, setState] = useState<ActionState>(initialActionState);
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    if (dialogRef.current && !dialogRef.current.open) dialogRef.current.showModal();
+  }, []);
+
+  async function submit(formData: FormData) {
+    setIsPending(true);
+    const result = await updateRequesterAction(initialActionState, formData);
+    setState(result);
+    setIsPending(false);
+
+    if (result.status === "success") {
+      dialogRef.current?.close();
+      router.refresh();
+    }
+  }
+
+  return (
+    <dialog className="dialog registry-dialog" ref={dialogRef} onClose={onClose} onClick={(event) => { if (event.target === event.currentTarget && !isPending) dialogRef.current?.close(); }}>
+      <form action={submit} className="dialog-panel">
+        <input type="hidden" name="requesterId" value={requester.id} />
+        <DialogHeader eyebrow="Cadastro auxiliar" title="Editar solicitante" description="Altere os dados usados nos novos chamados e movimentacoes." onClose={() => dialogRef.current?.close()} disabled={isPending} />
+        <div className="dialog-body form-stack">
+          <div className="field">
+            <label htmlFor={`requester-registration-${requester.id}`}>Matricula</label>
+            <input id={`requester-registration-${requester.id}`} name="registration" defaultValue={requester.registration} maxLength={40} required aria-invalid={Boolean(state.fieldErrors?.registration)} />
+            <FieldError value={state.fieldErrors?.registration?.[0]} />
+          </div>
+          <div className="field">
+            <label htmlFor={`requester-name-${requester.id}`}>Nome completo</label>
+            <input id={`requester-name-${requester.id}`} name="fullName" defaultValue={requester.full_name} maxLength={160} required aria-invalid={Boolean(state.fieldErrors?.fullName)} />
+            <FieldError value={state.fieldErrors?.fullName?.[0]} />
+          </div>
+          <ActionMessage state={state} />
+        </div>
+        <DialogFooter onClose={() => dialogRef.current?.close()} isPending={isPending} submitLabel="Salvar alteracoes" />
+      </form>
+    </dialog>
+  );
+}
+
+function SectorEditDialog({ sector, onClose }: { sector: Sector; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const router = useRouter();
+  const [state, setState] = useState<ActionState>(initialActionState);
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    if (dialogRef.current && !dialogRef.current.open) dialogRef.current.showModal();
+  }, []);
+
+  async function submit(formData: FormData) {
+    setIsPending(true);
+    const result = await updateSectorAction(initialActionState, formData);
+    setState(result);
+    setIsPending(false);
+
+    if (result.status === "success") {
+      dialogRef.current?.close();
+      router.refresh();
+    }
+  }
+
+  return (
+    <dialog className="dialog registry-dialog" ref={dialogRef} onClose={onClose} onClick={(event) => { if (event.target === event.currentTarget && !isPending) dialogRef.current?.close(); }}>
+      <form action={submit} className="dialog-panel">
+        <input type="hidden" name="sectorId" value={sector.id} />
+        <DialogHeader eyebrow="Cadastro auxiliar" title="Editar setor" description="A alteracao vale para os novos registros." onClose={() => dialogRef.current?.close()} disabled={isPending} />
+        <div className="dialog-body form-stack">
+          <div className="field">
+            <label htmlFor={`sector-name-${sector.id}`}>Nome do setor</label>
+            <input id={`sector-name-${sector.id}`} name="name" defaultValue={sector.name} maxLength={120} required aria-invalid={Boolean(state.fieldErrors?.name)} />
+            <FieldError value={state.fieldErrors?.name?.[0]} />
+          </div>
+          <ActionMessage state={state} />
+        </div>
+        <DialogFooter onClose={() => dialogRef.current?.close()} isPending={isPending} submitLabel="Salvar alteracoes" />
+      </form>
+    </dialog>
+  );
+}
+
+function RegistryRemovalDialog({ removal, onClose }: { removal: RegistryRemoval; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const router = useRouter();
+  const [state, setState] = useState<ActionState>(initialActionState);
+  const [isPending, setIsPending] = useState(false);
+  const isRequester = removal.kind === "requester";
+  const name = isRequester ? removal.record.full_name : removal.record.name;
+  const idField = isRequester ? "requesterId" : "sectorId";
+
+  useEffect(() => {
+    if (dialogRef.current && !dialogRef.current.open) dialogRef.current.showModal();
+  }, []);
+
+  async function submit(formData: FormData) {
+    setIsPending(true);
+    const result = isRequester
+      ? await deactivateRequesterAction(initialActionState, formData)
+      : await deactivateSectorAction(initialActionState, formData);
+    setState(result);
+    setIsPending(false);
+
+    if (result.status === "success") {
+      dialogRef.current?.close();
+      router.refresh();
+    }
+  }
+
+  return (
+    <dialog className="dialog registry-delete-dialog" ref={dialogRef} onClose={onClose} onClick={(event) => { if (event.target === event.currentTarget && !isPending) dialogRef.current?.close(); }}>
+      <form action={submit} className="dialog-panel">
+        <input type="hidden" name={idField} value={removal.record.id} />
+        <DialogHeader eyebrow="Cadastro auxiliar" title={`Remover ${isRequester ? "solicitante" : "setor"}`} description={name} onClose={() => dialogRef.current?.close()} disabled={isPending} />
+        <div className="dialog-body registry-delete-body">
+          <span className="registry-delete-icon" aria-hidden="true"><TriangleAlert size={22} /></span>
+          <div>
+            <h3>Remover {name} dos novos registros?</h3>
+            <p>Os historicos de chamados e movimentacoes permanecem preservados.</p>
+          </div>
+          {state.status === "error" ? <ActionMessage state={state} /> : null}
+        </div>
+        <div className="dialog-footer">
+          <button className="button button-secondary" type="button" disabled={isPending} onClick={() => dialogRef.current?.close()}>Cancelar</button>
+          <button className="button button-danger" type="submit" disabled={isPending}>
+            {isPending ? <LoaderCircle className="spin" size={18} aria-hidden="true" /> : <Trash2 size={18} aria-hidden="true" />}
+            {isPending ? "Removendo" : "Remover"}
+          </button>
+        </div>
+      </form>
+    </dialog>
+  );
+}
+
+function DialogHeader({ eyebrow, title, description, onClose, disabled }: { eyebrow: string; title: string; description: string; onClose: () => void; disabled: boolean }) {
+  return (
+    <div className="dialog-header">
+      <div><span className="eyebrow">{eyebrow}</span><h2>{title}</h2><p>{description}</p></div>
+      <button className="icon-button" type="button" onClick={onClose} disabled={disabled} aria-label="Fechar" title="Fechar"><X size={20} aria-hidden="true" /></button>
+    </div>
+  );
+}
+
+function DialogFooter({ onClose, isPending, submitLabel }: { onClose: () => void; isPending: boolean; submitLabel: string }) {
+  return (
+    <div className="dialog-footer">
+      <button className="button button-secondary" type="button" onClick={onClose} disabled={isPending}>Cancelar</button>
+      <button className="button button-primary" type="submit" disabled={isPending}>
+        {isPending ? <LoaderCircle className="spin" size={18} aria-hidden="true" /> : <Check size={18} aria-hidden="true" />}
+        {isPending ? "Salvando" : submitLabel}
+      </button>
+    </div>
+  );
 }

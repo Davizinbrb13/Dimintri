@@ -49,6 +49,7 @@ export type Database = {
           current_requester_id: number | null
           current_sector_id: number | null
           id: number
+          is_active: boolean
           model_id: number
           notes: string | null
           serial_number: string
@@ -62,6 +63,7 @@ export type Database = {
           current_requester_id?: number | null
           current_sector_id?: number | null
           id?: never
+          is_active?: boolean
           model_id: number
           notes?: string | null
           serial_number: string
@@ -75,6 +77,7 @@ export type Database = {
           current_requester_id?: number | null
           current_sector_id?: number | null
           id?: never
+          is_active?: boolean
           model_id?: number
           notes?: string | null
           serial_number?: string
@@ -377,6 +380,7 @@ export type Database = {
           created_by: string | null
           full_name: string
           id: number
+          is_active: boolean
           registration: string
           updated_at: string
         }
@@ -385,6 +389,7 @@ export type Database = {
           created_by?: string | null
           full_name: string
           id?: never
+          is_active?: boolean
           registration: string
           updated_at?: string
         }
@@ -393,6 +398,7 @@ export type Database = {
           created_by?: string | null
           full_name?: string
           id?: never
+          is_active?: boolean
           registration?: string
           updated_at?: string
         }

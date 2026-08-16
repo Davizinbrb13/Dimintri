@@ -23,12 +23,14 @@ export async function GET(request: Request) {
     supabase
       .from("requesters")
       .select("id, registration, full_name")
+      .eq("is_active", true)
       .ilike("registration", `${query}%`)
       .order("registration")
       .limit(8),
     supabase
       .from("requesters")
       .select("id, registration, full_name")
+      .eq("is_active", true)
       .ilike("full_name", `%${query}%`)
       .order("full_name")
       .limit(8),

@@ -61,6 +61,7 @@ export async function createMovementAction(
     supabase
       .from("requesters")
       .select("id")
+      .eq("is_active", true)
       .ilike("registration", parsed.data.requesterRegistration.toUpperCase())
       .maybeSingle(),
     supabase.from("profiles").select("role").eq("id", userId).single(),
@@ -118,6 +119,7 @@ async function findOrCreateSector(
   const { data: existing } = await supabase
     .from("sectors")
     .select("id")
+    .eq("is_active", true)
     .ilike("name", normalizedName)
     .maybeSingle();
 
@@ -135,6 +137,7 @@ async function findOrCreateSector(
     const { data: concurrent } = await supabase
       .from("sectors")
       .select("id")
+      .eq("is_active", true)
       .ilike("name", normalizedName)
       .single();
     return concurrent?.id ?? null;

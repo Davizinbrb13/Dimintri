@@ -33,6 +33,43 @@ const equipmentSchema = z.object({
   notes: optionalText(2000),
 });
 
+const requesterIdSchema = z.object({
+  requesterId: z.coerce.number().int().positive(),
+});
+
+const updateRequesterSchema = requesterSchema.extend({
+  requesterId: z.coerce.number().int().positive(),
+});
+
+const sectorIdSchema = z.object({
+  sectorId: z.coerce.number().int().positive(),
+});
+
+const updateSectorSchema = sectorSchema.extend({
+  sectorId: z.coerce.number().int().positive(),
+});
+
+const serialNumberSchema = z
+  .string()
+  .trim()
+  .min(2, "Informe o numero de serial.")
+  .max(100, "Use no maximo 100 caracteres.")
+  .refine(
+    (value) => /^[A-Z0-9._/-]+$/i.test(value),
+    "Use letras, numeros, ponto, hifen, barra ou sublinhado.",
+  );
+
+const updateEquipmentSchema = z.object({
+  assetId: z.coerce.number().int().positive(),
+  modelId: z.coerce.number().int().positive("Selecione o equipamento."),
+  serialNumber: serialNumberSchema,
+  notes: optionalText(2000),
+});
+
+const equipmentIdSchema = z.object({
+  assetId: z.coerce.number().int().positive(),
+});
+
 async function getIdentity() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
@@ -115,6 +152,200 @@ export async function createSectorAction(
   revalidatePath("/cadastros");
   revalidatePath("/dashboard");
   return { status: "success", message: "Setor cadastrado." };
+}
+
+export async function updateRequesterAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = updateRequesterSchema.safeParse({
+    requesterId: formData.get("requesterId"),
+    registration: formData.get("registration"),
+    fullName: formData.get("fullName"),
+  });
+
+  if (!parsed.success) return invalidForm(parsed.error);
+
+  const { supabase, userId } = await getIdentity();
+  if (!userId) return { status: "error", message: "Sua sessao expirou." };
+
+  const { data, error } = await supabase
+    .from("requesters")
+    .update({
+      registration: parsed.data.registration.toUpperCase(),
+      full_name: parsed.data.fullName,
+    })
+    .eq("id", parsed.data.requesterId)
+    .eq("is_active", true)
+    .select("id")
+    .maybeSingle();
+
+  if (error?.code === "23505") {
+    return { status: "error", message: "Esta matricula ja esta cadastrada." };
+  }
+
+  if (error || !data) {
+    return { status: "error", message: "Solicitante nao encontrado ou sem permissao para edita-lo." };
+  }
+
+  revalidateRegistryPaths();
+  return { status: "success", message: "Solicitante atualizado." };
+}
+
+export async function deactivateRequesterAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = requesterIdSchema.safeParse({ requesterId: formData.get("requesterId") });
+  if (!parsed.success) return invalidForm(parsed.error);
+
+  const { supabase, userId } = await getIdentity();
+  if (!userId) return { status: "error", message: "Sua sessao expirou." };
+
+  const { data, error } = await supabase
+    .from("requesters")
+    .update({ is_active: false })
+    .eq("id", parsed.data.requesterId)
+    .eq("is_active", true)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    return { status: "error", message: "Solicitante nao encontrado ou sem permissao para remove-lo." };
+  }
+
+  revalidateRegistryPaths();
+  return { status: "success", message: "Solicitante removido dos novos registros." };
+}
+
+export async function updateSectorAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = updateSectorSchema.safeParse({
+    sectorId: formData.get("sectorId"),
+    name: formData.get("name"),
+  });
+
+  if (!parsed.success) return invalidForm(parsed.error);
+
+  const { supabase, userId } = await getIdentity();
+  if (!userId) return { status: "error", message: "Sua sessao expirou." };
+
+  const { data, error } = await supabase
+    .from("sectors")
+    .update({ name: parsed.data.name })
+    .eq("id", parsed.data.sectorId)
+    .eq("is_active", true)
+    .select("id")
+    .maybeSingle();
+
+  if (error?.code === "23505") {
+    return { status: "error", message: "Este setor ja esta cadastrado." };
+  }
+
+  if (error || !data) {
+    return { status: "error", message: "Setor nao encontrado ou sem permissao para edita-lo." };
+  }
+
+  revalidateRegistryPaths();
+  return { status: "success", message: "Setor atualizado." };
+}
+
+export async function deactivateSectorAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = sectorIdSchema.safeParse({ sectorId: formData.get("sectorId") });
+  if (!parsed.success) return invalidForm(parsed.error);
+
+  const { supabase, userId } = await getIdentity();
+  if (!userId) return { status: "error", message: "Sua sessao expirou." };
+
+  const { data, error } = await supabase
+    .from("sectors")
+    .update({ is_active: false })
+    .eq("id", parsed.data.sectorId)
+    .eq("is_active", true)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    return { status: "error", message: "Setor nao encontrado ou sem permissao para remove-lo." };
+  }
+
+  revalidateRegistryPaths();
+  return { status: "success", message: "Setor removido dos novos registros." };
+}
+
+export async function updateEquipmentAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = updateEquipmentSchema.safeParse({
+    assetId: formData.get("assetId"),
+    modelId: formData.get("modelId"),
+    serialNumber: formData.get("serialNumber"),
+    notes: formData.get("notes"),
+  });
+
+  if (!parsed.success) return invalidForm(parsed.error);
+
+  const { supabase, userId } = await getIdentity();
+  if (!userId) return { status: "error", message: "Sua sessao expirou." };
+
+  const { data, error } = await supabase
+    .from("equipment_assets")
+    .update({
+      model_id: parsed.data.modelId,
+      serial_number: parsed.data.serialNumber.toUpperCase(),
+      notes: parsed.data.notes,
+    })
+    .eq("id", parsed.data.assetId)
+    .eq("is_active", true)
+    .select("id")
+    .maybeSingle();
+
+  if (error?.code === "23505") {
+    return { status: "error", message: "Este numero de serial ja esta cadastrado." };
+  }
+
+  if (error || !data) {
+    return { status: "error", message: "Equipamento nao encontrado ou sem permissao para edita-lo." };
+  }
+
+  revalidateRegistryPaths();
+  return { status: "success", message: "Equipamento atualizado." };
+}
+
+export async function deactivateEquipmentAction(
+  _: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = equipmentIdSchema.safeParse({ assetId: formData.get("assetId") });
+  if (!parsed.success) return invalidForm(parsed.error);
+
+  const { supabase, userId } = await getIdentity();
+  if (!userId) return { status: "error", message: "Sua sessao expirou." };
+
+  const { data, error } = await supabase
+    .from("equipment_assets")
+    .update({ is_active: false })
+    .eq("id", parsed.data.assetId)
+    .eq("is_active", true)
+    .in("status", ["available", "retired"])
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    return {
+      status: "error",
+      message: "O equipamento precisa estar disponivel ou baixado, e voce precisa ter permissao para remove-lo.",
+    };
+  }
+
+  revalidateRegistryPaths();
+  return { status: "success", message: "Equipamento removido do inventario ativo." };
 }
 
 export async function registerEquipmentAction(
@@ -230,4 +461,18 @@ function asRegistrationResult(value: unknown) {
 
   if (!assetIds.length || typeof createdCount !== "number") return null;
   return { assetIds, createdCount };
+}
+
+function invalidForm(error: z.ZodError): ActionState {
+  return {
+    status: "error",
+    message: "Revise os campos destacados.",
+    fieldErrors: error.flatten().fieldErrors,
+  };
+}
+
+function revalidateRegistryPaths() {
+  revalidatePath("/cadastros");
+  revalidatePath("/dashboard");
+  revalidatePath("/movimentacoes");
 }

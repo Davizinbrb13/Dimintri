@@ -97,6 +97,7 @@ export async function createTicketAction(
     supabase
       .from("requesters")
       .select("id")
+      .eq("is_active", true)
       .ilike("registration", registration)
       .maybeSingle(),
   ]);
@@ -280,6 +281,7 @@ async function findOrCreateSector(
   const { data: existing, error: lookupError } = await supabase
     .from("sectors")
     .select("id")
+    .eq("is_active", true)
     .ilike("name", normalizedName)
     .maybeSingle();
 
@@ -305,6 +307,7 @@ async function findOrCreateSector(
     const { data: concurrent } = await supabase
       .from("sectors")
       .select("id")
+      .eq("is_active", true)
       .ilike("name", normalizedName)
       .single();
 

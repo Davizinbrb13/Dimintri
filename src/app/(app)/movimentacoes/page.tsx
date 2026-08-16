@@ -37,6 +37,7 @@ export default async function MovementsPage() {
       .select(
         "id, serial_number, status, notes, created_at, model:equipment_models!inner(id, name, category:equipment_categories(id, name)), current_requester:requesters(id, registration, full_name), current_campus:campuses(id, name), current_sector:sectors(id, name)",
       )
+      .eq("is_active", true)
       .order("serial_number")
       .limit(1000),
     supabase.from("equipment_categories").select("id, name").eq("is_active", true).order("name"),
